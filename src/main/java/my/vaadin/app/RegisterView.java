@@ -6,27 +6,28 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.VerticalLayout;
 
-public class RegisterView  extends CustomComponent implements View {
+public class RegisterView extends CustomComponent implements View {
 
-	public static final String NAME = null;
+	public static final String NAME = "";
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
 		
 	}
 	public RegisterView(){
-		setSizeFull();
 		
 		PropertysetItem toRegister = new PropertysetItem();
-		toRegister.addItemProperty("name", new ObjectProperty<String>("test1"));
-		toRegister.addItemProperty("pass", new ObjectProperty<String>("test2"));
+		toRegister.addItemProperty("name", new ObjectProperty<String>(""));
+		toRegister.addItemProperty("pass", new ObjectProperty<String>(""));
 		
 		// Have some layout and create the fields
 		FormLayout form = new FormLayout();
@@ -51,5 +52,9 @@ public class RegisterView  extends CustomComponent implements View {
 		        }
 		    }
 		}));
+		VerticalLayout viewLayout = new VerticalLayout(form);
+		viewLayout.setSizeFull();
+        viewLayout.setComponentAlignment(form, Alignment.MIDDLE_CENTER);
+		setCompositionRoot(viewLayout);
 	}
 }

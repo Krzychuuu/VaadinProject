@@ -22,16 +22,20 @@ public class MyUI extends UI {
         new Navigator(this, this);
         getNavigator().addView(LoginView.NAME, LoginView.class);
         getNavigator().addView(LoggedView.NAME, LoggedView.class);
-        getNavigator().addView(RegisterView.NAME, RegisterView.class);
+        getNavigator().addView("RegisterView", new RegisterView());
         getNavigator().addViewChangeListener(new ViewChangeListener() {
 
             @Override
             public boolean beforeViewChange(ViewChangeEvent event) {
 
-                // Check if a user has logged in
-                boolean isLoggedIn = getSession().getAttribute("user") != null;
+                if(event.getViewName() == "RegisterView"){
+                	return true;
+                }
+              //Check if a user has logged in
+                else{
+              	boolean isLoggedIn = getSession().getAttribute("user") != null;
                 boolean isLoginView = event.getNewView() instanceof LoginView;
-
+                
                 if (!isLoggedIn && !isLoginView) {
                     // Redirect to login view when not logged
                     getNavigator().navigateTo(LoginView.NAME);
@@ -41,6 +45,7 @@ public class MyUI extends UI {
                     // If someone tries to access to login view while logged in,
                     // then cancel
                     return false;
+                }
                 }
 
                 return true;

@@ -1,6 +1,7 @@
 package my.vaadin.app;
 
 import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -8,6 +9,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -42,7 +44,7 @@ public class LoginView extends CustomComponent implements View,
         password.setNullRepresentation("");
 
         loginButton = new Button("Login", this);
-        registerButton = new Button("Register");
+        registerButton = new Button("Register", this);
 
         VerticalLayout fields = new VerticalLayout(user, password, loginButton, registerButton);
         fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
@@ -107,7 +109,7 @@ public class LoginView extends CustomComponent implements View,
 	        }
     	}
     	else if (event.getButton() == registerButton){
-    		 getUI().getNavigator().navigateTo(RegisterView.NAME);
+    		getUI().getNavigator().navigateTo("RegisterView");
     	}
     }
 }
