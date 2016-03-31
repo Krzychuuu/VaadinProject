@@ -1,6 +1,5 @@
 package my.vaadin.app;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractValidator;
@@ -26,39 +25,48 @@ public class LoginView extends CustomComponent implements View,
     
     public static final String NAME = "login";
 
-    private final TextField login;
+    private final TextField user;
 
     private final PasswordField password;
 
     private final Button loginButton;
 
     private final Button registerButton;
-    private User user;
-    private FormLayout formLayout;
-    private FieldGroup binder;
-    private BeanItem<User> item;
-    private Notification errorNotification;
-    private Button submit;
+
     public LoginView() {
         setSizeFull();
-        user = new User();
-        item = new BeanItem<>(user);
-        binder = new BeanFieldGroup<>(User.class);
-        binder.setItemDataSource(item);
-        binder.setBuffered(true);
-        formLayout.setMargin(true);
-        login = binder.buildAndBind("login", "name", TextField.class);
-        password = binder.buildAndBind("password", "pass", PasswordField.class);
-        loginButton = new Button("loginButton", this);
+        user = new TextField("User:");
+        user.setWidth("300px");
+        user.setRequired(true);
+        user.setInvalidAllowed(false);
+
+        password = new PasswordField("Password:");
+        password.setWidth("300px");
+        password.setRequired(true);
+        password.addValidator(new PasswordValidator());
+        password.setValue("");
+        password.setNullRepresentation("");
+
+        loginButton = new Button("Login", this);
         registerButton = new Button("Register", this);
-        formLayout.addComponents(login, password, submit, registerButton);       
-            
-        setCompositionRoot(formLayout);
-    }
         
+
+        VerticalLayout fields = new VerticalLayout(user, password, loginButton, registerButton);
+        fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
+        fields.setSpacing(true);
+        fields.setMargin(new MarginInfo(true, true, true, false));
+        fields.setSizeUndefined();
+
+        VerticalLayout viewLayout = new VerticalLayout(fields);
+        viewLayout.setSizeFull();
+        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
+        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
+        setCompositionRoot(viewLayout);
+    }
+
     @Override
     public void enter(ViewChangeEvent event) {
-
+        user.focus();
     }
 
     // Validator for validating the passwords
@@ -84,37 +92,27 @@ public class LoginView extends CustomComponent implements View,
 
     public void buttonClick(ClickEvent event) {
     	if (event.getButton() == loginButton){
-//    		if (!user.isValid() || !password.isValid()) {
-//	            return;
-//	        }
-//	
-//	        String username = user.getValue();
-//	        String password = this.password.getValue();
-//
-//	        
-//	        		        boolean isValid = username.equals("test1")
-//	                && password.equals("test2");
-//	        if (isValid) {
-    		try {
-                binder.commit();
+    		if (!user.isValid() || !password.isValid()) {
+	            return;
+	        }
+	
+	        String username = user.getValue();
+	        String password = this.password.getValue();
 
-                //TODO: remove it to validation class after db integration
-                if(!user.getName().equals("test1") && !user.getPass().equals("test1")){
-                    return;
-                }
-                
-            } catch (FieldGroup.CommitException e) {
-                e.printStackTrace();
-            }
-	            getSession().setAttribute("user", login.getValue());
+	        
+	        		        boolean isValid = username.equals("test1")
+	                && password.equals("test2");
+	        if (isValid) {
+	
+	            getSession().setAttribute("user", username);
 	            getUI().getNavigator().navigateTo(LoggedView.NAME);
 	
-//	        } else {
+	        } else {
 	
-//	            // Wrong password clear the password field and refocuses it
-//	            this.password.setValue(null);
-//	            this.password.focus();
-//	        }
+	            // Wrong password clear the password field and refocuses it
+	            this.password.setValue(null);
+	            this.password.focus();
+	        }
     	}
     	else if (event.getButton() == registerButton){
     		getUI().getNavigator().navigateTo("RegisterView");

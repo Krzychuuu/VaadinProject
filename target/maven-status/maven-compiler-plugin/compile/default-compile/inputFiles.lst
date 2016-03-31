@@ -1,7 +1,9 @@
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/LoginView.java
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/RegisterView.java
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/MyUI.java
+/home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/LoginPanelWindow.java
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/User.java
+/home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/LoginForm.java
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/Inject.java
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/LoggedView.java
 /home/student/workspace/Vaadin1/src/main/java/my/vaadin/app/UserInfo.java

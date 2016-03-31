@@ -5,58 +5,51 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.WrappedSession;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 @Theme("mytheme")
 @Widgetset("my.vaadin.app.MyAppWidgetset")
 public class MyUI extends UI {
 	
-	
-	@Override
-    protected void init(VaadinRequest request) {
 
-        new Navigator(this, this);
-        getNavigator().addView(LoginView.NAME, LoginView.class);
-        getNavigator().addView(LoggedView.NAME, LoggedView.class);
-        getNavigator().addView("RegisterView", new RegisterView());
-        getNavigator().addViewChangeListener(new ViewChangeListener() {
+    private VerticalLayout layout;
 
-            @Override
-            public boolean beforeViewChange(ViewChangeEvent event) {
+    @Override
+    protected void init(VaadinRequest vaadinRequest) {
+        layout = new VerticalLayout();
+        layout.setSizeUndefined();
+        layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
 
-                if(event.getViewName() == "RegisterView"){
-                	return true;
-                }
-              //Check if a user has logged in
-                else{
-              	boolean isLoggedIn = getSession().getAttribute("user") != null;
-                boolean isLoginView = event.getNewView() instanceof LoginView;
-                
-                if (!isLoggedIn && !isLoginView) {
-                    // Redirect to login view when not logged
-                    getNavigator().navigateTo(LoginView.NAME);
-                    return false;
+        layout.setSizeFull();
+       
 
-                } else if (isLoggedIn && isLoginView) {
-                    // If someone tries to access to login view while logged in,
-                    // then cancel
-                    return false;
-                }
-                }
+        if(!isLoggedIn()){
+            LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
+            getUI().addWindow(loginPanelWindow);
+            setContent(null);
+        }else {
+            setContent(layout);
+        }
+    }
 
-                return true;
-            }
+    public static boolean isLoggedIn(){
+        WrappedSession currentSession = VaadinService.getCurrentRequest().getWrappedSession();
+        return currentSession.getAttribute("user") != null;
+    }
 
-            @Override
-            public void afterViewChange(ViewChangeEvent event) {
+    public static WrappedSession getCurrentSession(){
+        return VaadinService.getCurrentRequest().getWrappedSession();
+    }
 
-            }
-        });
-	}
+    public void setMainContent(){
+        setContent(layout);
+    }
 	
 	@WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = MyUI.class, productionMode = true)
