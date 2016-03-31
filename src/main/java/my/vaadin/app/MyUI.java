@@ -20,8 +20,9 @@ public class MyUI extends UI {
     protected void init(VaadinRequest request) {
 
         new Navigator(this, this);
-        getNavigator().addView(LoginView.NAME, LoginView.class);//
+        getNavigator().addView(LoginView.NAME, LoginView.class);
         getNavigator().addView(LoggedView.NAME, LoggedView.class);
+        getNavigator().addView(RegisterView.NAME, RegisterView.class);
         getNavigator().addViewChangeListener(new ViewChangeListener() {
 
             @Override

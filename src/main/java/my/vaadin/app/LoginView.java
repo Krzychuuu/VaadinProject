@@ -1,7 +1,6 @@
 package my.vaadin.app;
 
 import com.vaadin.data.validator.AbstractValidator;
-import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -25,6 +24,8 @@ public class LoginView extends CustomComponent implements View,
 
     private final Button loginButton;
 
+    private final Button registerButton;
+    
     public LoginView() {
         setSizeFull();
 
@@ -41,8 +42,9 @@ public class LoginView extends CustomComponent implements View,
         password.setNullRepresentation("");
 
         loginButton = new Button("Login", this);
+        registerButton = new Button("Register");
 
-        VerticalLayout fields = new VerticalLayout(user, password, loginButton);
+        VerticalLayout fields = new VerticalLayout(user, password, loginButton, registerButton);
         fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
         fields.setSpacing(true);
         fields.setMargin(new MarginInfo(true, true, true, false));
@@ -82,26 +84,30 @@ public class LoginView extends CustomComponent implements View,
     }
 
     public void buttonClick(ClickEvent event) {
-        if (!user.isValid() || !password.isValid()) {
-            return;
-        }
-
-        String username = user.getValue();
-        String password = this.password.getValue();
-
-        boolean isValid = username.equals("test")
-                && password.equals("test");
-        if (isValid) {
-
-            getSession().setAttribute("user", username);
-            getUI().getNavigator().navigateTo(LoggedView.NAME);
-
-        } else {
-
-            // Wrong password clear the password field and refocuses it
-            this.password.setValue(null);
-            this.password.focus();
-
-        }
+    	if (event.getButton() == loginButton){
+    		if (!user.isValid() || !password.isValid()) {
+	            return;
+	        }
+	
+	        String username = user.getValue();
+	        String password = this.password.getValue();
+	
+	        boolean isValid = username.equals("test1")
+	                && password.equals("test2");
+	        if (isValid) {
+	
+	            getSession().setAttribute("user", username);
+	            getUI().getNavigator().navigateTo(LoggedView.NAME);
+	
+	        } else {
+	
+	            // Wrong password clear the password field and refocuses it
+	            this.password.setValue(null);
+	            this.password.focus();
+	        }
+    	}
+    	else if (event.getButton() == registerButton){
+    		 getUI().getNavigator().navigateTo(RegisterView.NAME);
+    	}
     }
 }
