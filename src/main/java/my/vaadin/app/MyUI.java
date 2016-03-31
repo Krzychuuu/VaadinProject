@@ -36,7 +36,7 @@ public class MyUI extends UI {
 	protected void init(VaadinRequest vaadinRequest) {
 		final VerticalLayout layout = new VerticalLayout();
 
-		filterText.setInputPrompt("test12");
+		filterText.setInputPrompt("test2");
 		filterText.addTextChangeListener(e -> {
 			grid.setContainerDataSource(new BeanItemContainer<>(Customer.class, service.findAll(e.getText())));
 		});
