@@ -22,8 +22,6 @@ public class RegisterView extends CustomComponent implements View {
     @Inject
     private UserInfo userInfo;
 
-    @Inject
-    private UserDAO userDAO;
     
 	public static final String NAME = "";
 	@Override

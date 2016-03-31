@@ -1,7 +1,9 @@
 package my.vaadin.app;
 
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.AbstractValidator;
-import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.MarginInfo;
@@ -9,6 +11,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -20,55 +23,42 @@ public class LoginView extends CustomComponent implements View,
 	
     @Inject
     private UserInfo userInfo;
-
-    @Inject
-    private UserDAO userDAO;
     
     public static final String NAME = "login";
 
-    private final TextField user;
+    private final TextField login;
 
     private final PasswordField password;
 
     private final Button loginButton;
 
     private final Button registerButton;
-    
+    private User user;
+    private FormLayout formLayout;
+    private FieldGroup binder;
+    private BeanItem<User> item;
+    private Notification errorNotification;
+    private Button submit;
     public LoginView() {
         setSizeFull();
-
-        user = new TextField("User:");
-        user.setWidth("300px");
-        user.setRequired(true);
-        user.setInvalidAllowed(false);
-
-        password = new PasswordField("Password:");
-        password.setWidth("300px");
-        password.setRequired(true);
-        password.addValidator(new PasswordValidator());
-        password.setValue("");
-        password.setNullRepresentation("");
-
-        loginButton = new Button("Login", this);
+        user = new User();
+        item = new BeanItem<>(user);
+        binder = new BeanFieldGroup<>(User.class);
+        binder.setItemDataSource(item);
+        binder.setBuffered(true);
+        formLayout.setMargin(true);
+        login = binder.buildAndBind("login", "name", TextField.class);
+        password = binder.buildAndBind("password", "pass", PasswordField.class);
+        loginButton = new Button("loginButton", this);
         registerButton = new Button("Register", this);
-        
-
-        VerticalLayout fields = new VerticalLayout(user, password, loginButton, registerButton);
-        fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
-        fields.setSpacing(true);
-        fields.setMargin(new MarginInfo(true, true, true, false));
-        fields.setSizeUndefined();
-
-        VerticalLayout viewLayout = new VerticalLayout(fields);
-        viewLayout.setSizeFull();
-        viewLayout.setComponentAlignment(fields, Alignment.MIDDLE_CENTER);
-        viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
-        setCompositionRoot(viewLayout);
+        formLayout.addComponents(login, password, submit, registerButton);       
+            
+        setCompositionRoot(formLayout);
     }
-
+        
     @Override
     public void enter(ViewChangeEvent event) {
-        user.focus();
+
     }
 
     // Validator for validating the passwords
@@ -97,26 +87,34 @@ public class LoginView extends CustomComponent implements View,
 //    		if (!user.isValid() || !password.isValid()) {
 //	            return;
 //	        }
-	
-	        String username = user.getValue();
-	        String password = this.password.getValue();
-
-	        boolean loginUser = userDAO.getUserBy(username, password);
-	        if (loginUser == true) {
-
-	        	//	        boolean isValid = username.equals("test1")
+//	
+//	        String username = user.getValue();
+//	        String password = this.password.getValue();
+//
+//	        
+//	        		        boolean isValid = username.equals("test1")
 //	                && password.equals("test2");
 //	        if (isValid) {
-	
-	            getSession().setAttribute("user", username);
+    		try {
+                binder.commit();
+
+                //TODO: remove it to validation class after db integration
+                if(!user.getName().equals("test1") && !user.getPass().equals("test1")){
+                    return;
+                }
+                
+            } catch (FieldGroup.CommitException e) {
+                e.printStackTrace();
+            }
+	            getSession().setAttribute("user", login.getValue());
 	            getUI().getNavigator().navigateTo(LoggedView.NAME);
 	
-	        } else {
+//	        } else {
 	
-	            // Wrong password clear the password field and refocuses it
-	            this.password.setValue(null);
-	            this.password.focus();
-	        }
+//	            // Wrong password clear the password field and refocuses it
+//	            this.password.setValue(null);
+//	            this.password.focus();
+//	        }
     	}
     	else if (event.getButton() == registerButton){
     		getUI().getNavigator().navigateTo("RegisterView");
