@@ -17,7 +17,13 @@ import com.vaadin.ui.themes.Reindeer;
 
 public class LoginView extends CustomComponent implements View,
         Button.ClickListener {
+	
+    @Inject
+    private UserInfo userInfo;
 
+    @Inject
+    private UserDAO userDAO;
+    
     public static final String NAME = "login";
 
     private final TextField user;
@@ -45,6 +51,7 @@ public class LoginView extends CustomComponent implements View,
 
         loginButton = new Button("Login", this);
         registerButton = new Button("Register", this);
+        
 
         VerticalLayout fields = new VerticalLayout(user, password, loginButton, registerButton);
         fields.setCaption("Please login to access the application. (test@test.com/passw0rd)");
@@ -87,16 +94,19 @@ public class LoginView extends CustomComponent implements View,
 
     public void buttonClick(ClickEvent event) {
     	if (event.getButton() == loginButton){
-    		if (!user.isValid() || !password.isValid()) {
-	            return;
-	        }
+//    		if (!user.isValid() || !password.isValid()) {
+//	            return;
+//	        }
 	
 	        String username = user.getValue();
 	        String password = this.password.getValue();
-	
-	        boolean isValid = username.equals("test1")
-	                && password.equals("test2");
-	        if (isValid) {
+
+	        boolean loginUser = userDAO.getUserBy(username, password);
+	        if (loginUser == true) {
+
+	        	//	        boolean isValid = username.equals("test1")
+//	                && password.equals("test2");
+//	        if (isValid) {
 	
 	            getSession().setAttribute("user", username);
 	            getUI().getNavigator().navigateTo(LoggedView.NAME);

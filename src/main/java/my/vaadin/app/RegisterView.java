@@ -1,5 +1,7 @@
 package my.vaadin.app;
 
+import java.awt.List;
+
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.ObjectProperty;
@@ -17,6 +19,12 @@ import com.vaadin.ui.VerticalLayout;
 
 public class RegisterView extends CustomComponent implements View {
 
+    @Inject
+    private UserInfo userInfo;
+
+    @Inject
+    private UserDAO userDAO;
+    
 	public static final String NAME = "";
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -24,7 +32,7 @@ public class RegisterView extends CustomComponent implements View {
 		
 	}
 	public RegisterView(){
-		
+	 		
 		PropertysetItem toRegister = new PropertysetItem();
 		toRegister.addItemProperty("name", new ObjectProperty<String>(""));
 		toRegister.addItemProperty("pass", new ObjectProperty<String>(""));
