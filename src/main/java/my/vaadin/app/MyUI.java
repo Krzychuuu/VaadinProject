@@ -10,6 +10,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
@@ -20,6 +21,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -60,7 +62,12 @@ public class MyUI extends UI implements Broadcaster.BroadcastListener {
 			String username = user.getValue();
 			String password1 = pwd1.getValue();
 			String password2 = pwd2.getValue();
-			if (pwd1.getValue().equals(pwd2.getValue())) {
+			if (!pwd1.getValue().equals(pwd2.getValue())) {
+				Notification errorNotification = new Notification("Passwords do not match", Notification.Type.ERROR_MESSAGE);
+				errorNotification.setDelayMsec(200);
+				errorNotification.show(Page.getCurrent());
+			}
+			else {
 				users.addBean(new User(user.getValue(), pwd1.getValue()));
 				LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
 				getUI().addWindow(loginPanelWindow);
