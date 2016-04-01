@@ -34,7 +34,8 @@ public class LoginForm extends CustomComponent {
 	private void addFormFieldsToLayout() {
 		login = binder.buildAndBind("login", "name", TextField.class);
 		password = binder.buildAndBind("password", "pass", PasswordField.class);
-
+		password.setValue("");
+		login.setValue("");
 		submit = new Button("submit", (Button.ClickListener) (clickEvent) -> {
 
 			try {
