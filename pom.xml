@@ -87,21 +87,16 @@
 		</dependency>
 		
 		-->
-		 <dependency>
+		 <!-- <dependency>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-client-compiled</artifactId>
         <version>${vaadin.version}</version>
-    </dependency>
+    </dependency> -->
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
 		</dependency>
-		<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
-</dependency>
-	</dependencies>
+</dependencies>
 
 	<build>
 		<plugins>
