@@ -105,9 +105,6 @@ public class BookService {
 		abouts.put(entry.getId(), entry);
 	}
 
-	/**
-	 * Sample data generation
-	 */
 	public void ensureTestData() {
 		if (findAll().isEmpty()) {
 			final String[] names = new String[] {"Hobbit Tolkien", "Cruzoe Defoe",

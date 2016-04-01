@@ -103,11 +103,10 @@ public class MyUI extends UI {
 		});
 
 		if (!isRegistered()) {
-			LoginPanelWindow registerPanelWindow = new LoginPanelWindow();
+			RegisterPanelWindow registerPanelWindow = new RegisterPanelWindow();
 			getUI().addWindow(registerPanelWindow);
 			setContent(null);
 		} else if (!isLoggedIn()) {
-
 			LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
 			getUI().addWindow(loginPanelWindow);
 			setContent(null);

@@ -20,7 +20,6 @@ public class BookForm extends BookFormDesign {
 		this.book = book;
 		BeanFieldGroup.bindFieldsUnbuffered(book, this);
 
-		// Show delete button for only customers already in the database
 		delete.setVisible(book.isPersisted());
 		setVisible(true);
 		title.selectAll();
