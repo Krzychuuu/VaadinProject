@@ -20,7 +20,16 @@ public class User implements Serializable  {
     @Size(min = 5)
     private String pass;
     
-    public String getPass() {
+    public User(String string, String string2) {
+		this.name = string;
+		this.pass = string2;
+	}
+
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getPass() {
 		return pass;
 	}
 
@@ -36,13 +45,4 @@ public class User implements Serializable  {
         this.name = name;
     }
 
-    BeanItemContainer<User> users =
-    		new BeanItemContainer<User>(User.class); 
-
-//    users.addBean(new User("test22", "test22"));
-//    users.addBean(new User("test33", "test33"));
-//
-//    Table table = new Table("Users", users);
-//    VerticalLayout layout = new VerticalLayout;
-//    layout.addComponent(table); 
 }

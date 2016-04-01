@@ -2,6 +2,7 @@ package my.vaadin.app;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.*;
 
@@ -15,6 +16,7 @@ public class LoginForm extends CustomComponent {
     private User user;
     private Notification errorNotification;
     private Button submit;
+    private Button register;
 
     public LoginForm(){
         formLayout = new FormLayout();
@@ -38,8 +40,10 @@ public class LoginForm extends CustomComponent {
             try {
                 binder.commit();
 
+                BeanItemContainer<User> users =
+                		new BeanItemContainer<User>(User.class);
                 //TODO: remove it to validation class after db integration
-                if(!user.getName().equals("root1234") && !user.getPass().equals("test1234")){
+                if(!user.getName().equals("test1") && !user.getPass().equals("test1")){
                     showLoginErrorMessage();
                     return;
                 }
@@ -55,8 +59,10 @@ public class LoginForm extends CustomComponent {
                 e.printStackTrace();
             }
         });
-
-        formLayout.addComponents(login, password, submit);
+        register = new Button("register", (Button.ClickListener)(clickEvent) -> {
+        	getUI().getPage().setLocation("/RegisterView");
+        });
+        formLayout.addComponents(login, password, submit, register);
     }
 
     private void showLoginErrorMessage(){
