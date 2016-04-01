@@ -16,16 +16,26 @@ import com.vaadin.server.WrappedSession;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("mytheme")
 @Widgetset("my.vaadin.app.MyAppWidgetset")
 public class MyUI extends UI {
+
+	public TextField user = new TextField("Nickname:");
+	public PasswordField pwd1 = new PasswordField("Password:");
+	public PasswordField pwd2 = new PasswordField("Pass-check:");
+	public Button register = new Button();
+	public FormLayout regform;
+	private VerticalLayout viewLayout; 
 
 	private Button logout;
 	private VerticalLayout layout;
@@ -36,12 +46,34 @@ public class MyUI extends UI {
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
+
+		BeanItemContainer<User> users = new BeanItemContainer<User>(User.class);
+		regform = new FormLayout();
+		regform.addComponent(user);
+		regform.addComponent(pwd1);
+		regform.addComponent(pwd2);
+
+		
+		register = new Button("register", (Button.ClickListener) (clickEvent) -> {
+			String username = user.getValue();
+			String password1 = pwd1.getValue();
+			String password2 = pwd2.getValue();
+			if (pwd1.equals(pwd2)) {
+				users.addBean(new User(user.getValue(), pwd1.getValue()));
+			}
+		});
+		regform.addComponent(register);
+		viewLayout = new VerticalLayout();
+		viewLayout.setSizeFull();
+		viewLayout.addComponent(regform);
+		viewLayout.setComponentAlignment(regform, Alignment.MIDDLE_CENTER);
+
 		layout = new VerticalLayout();
 		// layout.setSizeUndefined();
 		layout.setWidth("100%");
 		layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+
 		// MAIN
-		BeanItemContainer<User> users = new BeanItemContainer<User>(User.class);
 
 		logout = new Button("logout", (Button.ClickListener) (clickEvent) -> {
 			getCurrentSession().removeAttribute("user");
@@ -50,7 +82,8 @@ public class MyUI extends UI {
 		});
 
 		layout.addComponent(logout);
-		filterText.setInputPrompt("test");
+		
+		filterText.setInputPrompt("Type here to filter");
 		filterText.addTextChangeListener(e -> {
 			grid.setContainerDataSource(new BeanItemContainer<>(Book.class, service.findAll(e.getText())));
 		});
@@ -89,6 +122,7 @@ public class MyUI extends UI {
 
 		layout.setMargin(true);
 		layout.setSpacing(true);
+
 		setContent(layout);
 
 		form.setVisible(false);
@@ -102,11 +136,8 @@ public class MyUI extends UI {
 			}
 		});
 
-		if (!isRegistered()) {
-			RegisterPanelWindow registerPanelWindow = new RegisterPanelWindow();
-			getUI().addWindow(registerPanelWindow);
-			setContent(null);
-		} else if (!isLoggedIn()) {
+		
+		if (!isLoggedIn()) {
 			LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
 			getUI().addWindow(loginPanelWindow);
 			setContent(null);
@@ -132,6 +163,9 @@ public class MyUI extends UI {
 	public void updateList() {
 		List<Book> books = service.findAll(filterText.getValue());
 		grid.setContainerDataSource(new BeanItemContainer<>(Book.class, books));
+	}
+	public void setRegContent() {
+		setContent(viewLayout);
 	}
 
 	public void setMainContent() {

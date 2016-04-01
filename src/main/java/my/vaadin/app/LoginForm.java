@@ -42,7 +42,8 @@ public class LoginForm extends CustomComponent {
 
 				BeanItemContainer<User> users = new BeanItemContainer<User>(User.class);
 				// TODO: remove it to validation class after db integration
-				if (!user.getName().equals("test1") && !user.getPass().equals("test1")) {
+				if ((!user.getName().equals("test1") && !user.getPass().equals("test1")) &&
+						(!user.getName().equals("test2") && !user.getPass().equals("test2"))){
 					showLoginErrorMessage();
 					return;
 				}
@@ -53,7 +54,7 @@ public class LoginForm extends CustomComponent {
 				parent.close();
 				root.setMainContent();
 
-				MyUI.getCurrentSession().setAttribute("user", "root1234");
+				MyUI.getCurrentSession().setAttribute("user", "user");
 			} catch (FieldGroup.CommitException e) {
 				e.printStackTrace();
 			}
@@ -61,10 +62,9 @@ public class LoginForm extends CustomComponent {
 		register = new Button("register", (Button.ClickListener) (clickEvent) -> {
 			LoginPanelWindow parent = (LoginPanelWindow) getParent();
 			MyUI root = (MyUI) parent.getParent();
-
 			parent.close();
-
 			MyUI.getCurrentSession().setAttribute("register", "register");
+			root.setRegContent();
 
 		});
 		formLayout.addComponents(login, password, submit, register);

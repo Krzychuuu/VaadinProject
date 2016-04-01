@@ -11,8 +11,8 @@ import com.vaadin.ui.Button.ClickEvent;
 public class RegisterForm extends CustomComponent {
 
 	public TextField user = new TextField("Input nick");
-    public PasswordField pwd1 = new PasswordField();
-    public PasswordField pwd2 = new PasswordField();
+    public PasswordField pwd1 = new PasswordField("Password:");
+    public PasswordField pwd2 = new PasswordField("Pass-check:");
     public Button submit = new Button();
     public FormLayout form;
     BeanItemContainer<User> users =
