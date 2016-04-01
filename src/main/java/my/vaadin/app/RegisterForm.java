@@ -14,13 +14,12 @@ public class RegisterForm extends CustomComponent {
     public PasswordField pwd1 = new PasswordField();
     public PasswordField pwd2 = new PasswordField();
     public Button submit = new Button();
+    public FormLayout form;
     BeanItemContainer<User> users =
     		new BeanItemContainer<User>(User.class); 
 
     public RegisterForm(){
-   
-
-    		FormLayout form = new FormLayout();
+       		form = new FormLayout();
     		form.addComponent(user);
     		form.addComponent(pwd1);
     		form.addComponent(pwd2);

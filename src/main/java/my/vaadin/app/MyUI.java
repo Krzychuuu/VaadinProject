@@ -32,22 +32,23 @@ public class MyUI extends UI {
         BeanItemContainer<User> users =
         		new BeanItemContainer<User>(User.class); 
 
-        users.addBean(new User("test22", "test22"));
-        users.addBean(new User("test33", "test33"));
-        users.addBean(new User("test44", "test44"));
         logout = new Button("logout", (Button.ClickListener)(clickEvent) -> {
             getCurrentSession().removeAttribute("user");
             setContent(null);
             getUI().addWindow(new LoginPanelWindow());
-    });
+        });
         
-        Table table = new Table("Users", users);
         layout.addComponent(logout);
-        layout.addComponent(table); 
-               
-       
-
-        if(!isLoggedIn()){
+     
+        
+        
+          
+        if(!isRegistered()){
+        	LoginPanelWindow registerPanelWindow = new LoginPanelWindow();
+        	getUI().addWindow(registerPanelWindow);
+        	setContent(null);
+        }
+        else if(!isLoggedIn()){
         	
             LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
             getUI().addWindow(loginPanelWindow);
@@ -57,6 +58,10 @@ public class MyUI extends UI {
         }
     }
 
+    public static boolean isRegistered(){
+        WrappedSession currentSession = VaadinService.getCurrentRequest().getWrappedSession();
+        return currentSession.getAttribute("register") != null;
+    }
     public static boolean isLoggedIn(){
         WrappedSession currentSession = VaadinService.getCurrentRequest().getWrappedSession();
         return currentSession.getAttribute("user") != null;

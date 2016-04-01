@@ -60,7 +60,15 @@ public class LoginForm extends CustomComponent {
             }
         });
         register = new Button("register", (Button.ClickListener)(clickEvent) -> {
-        	getUI().getPage().setLocation("/RegisterView");
+        	LoginPanelWindow parent = (LoginPanelWindow)getParent();
+
+            MyUI root = (MyUI)parent.getParent();
+
+            parent.close();
+            
+
+            MyUI.getCurrentSession().setAttribute("register", "register");
+
         });
         formLayout.addComponents(login, password, submit, register);
     }
