@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
@@ -28,14 +29,15 @@ import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("mytheme")
 @Widgetset("my.vaadin.app.MyAppWidgetset")
-public class MyUI extends UI {
+@Push
+public class MyUI extends UI implements Broadcaster.BroadcastListener {
 
 	public TextField user = new TextField("Nickname:");
 	public PasswordField pwd1 = new PasswordField("Password:");
 	public PasswordField pwd2 = new PasswordField("Pass-check:");
 	public Button register = new Button();
 	public FormLayout regform;
-	private VerticalLayout viewLayout; 
+	private VerticalLayout viewLayout;
 
 	private Button logout;
 	private VerticalLayout layout;
@@ -52,14 +54,17 @@ public class MyUI extends UI {
 		regform.addComponent(user);
 		regform.addComponent(pwd1);
 		regform.addComponent(pwd2);
+		Broadcaster.register(this);
 
-		
 		register = new Button("register", (Button.ClickListener) (clickEvent) -> {
 			String username = user.getValue();
 			String password1 = pwd1.getValue();
 			String password2 = pwd2.getValue();
-			if (pwd1.equals(pwd2)) {
+			if (pwd1.getValue().equals(pwd2.getValue())) {
 				users.addBean(new User(user.getValue(), pwd1.getValue()));
+				LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
+				getUI().addWindow(loginPanelWindow);
+				setContent(null);
 			}
 		});
 		regform.addComponent(register);
@@ -82,7 +87,7 @@ public class MyUI extends UI {
 		});
 
 		layout.addComponent(logout);
-		
+
 		filterText.setInputPrompt("Type here to filter");
 		filterText.addTextChangeListener(e -> {
 			grid.setContainerDataSource(new BeanItemContainer<>(Book.class, service.findAll(e.getText())));
@@ -136,7 +141,6 @@ public class MyUI extends UI {
 			}
 		});
 
-		
 		if (!isLoggedIn()) {
 			LoginPanelWindow loginPanelWindow = new LoginPanelWindow();
 			getUI().addWindow(loginPanelWindow);
@@ -164,6 +168,23 @@ public class MyUI extends UI {
 		List<Book> books = service.findAll(filterText.getValue());
 		grid.setContainerDataSource(new BeanItemContainer<>(Book.class, books));
 	}
+	@Override
+    public void receiveBroadcast(final String message) {
+        // Must lock the session to execute logic safely
+        access(new Runnable() {
+            @Override
+            public void run() {
+                updateList();
+            }
+        });
+    }
+	@Override
+	public void detach() {
+		Broadcaster.unregister(this);
+		super.detach();
+	}
+
+
 	public void setRegContent() {
 		setContent(viewLayout);
 	}

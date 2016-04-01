@@ -27,13 +27,13 @@ public class BookForm extends BookFormDesign {
 
 	private void delete() {
 		service.delete(book);
-		myUI.updateList();
+		 Broadcaster.broadcast("");
 		setVisible(false);
 	}
 
 	private void save() {
 		service.save(book);
-		myUI.updateList();
+		 Broadcaster.broadcast("");
 		setVisible(false);
 	}
 }
